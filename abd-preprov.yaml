@@ -209,8 +209,17 @@ switch:
       - uart.write:
           id: uart_bus
           data: !lambda |-
+            std::string s = "Motor 1 ON " + std::to_string((int)id(motor_1_speed).state) + "\n";
+            return std::vector<unsigned char>(s.begin(), s.end());
+      # Re-assert direction shortly after start. A direction command can be
+      # lost on the wire (the driver's RX re-arm has a drop window), leaving
+      # the pin stale for a whole run; asserting once the motor is up makes
+      # every run's direction match the switch state regardless.
+      - delay: 500ms
+      - uart.write:
+          id: uart_bus
+          data: !lambda |-
             std::string s = std::string("Motor 1 ") + (id(motor_1_direction).state ? "FWD" : "REV") + "\n";
-            s += "Motor 1 ON " + std::to_string((int)id(motor_1_speed).state) + "\n";
             return std::vector<unsigned char>(s.begin(), s.end());
     turn_off_action:
       - uart.write:
@@ -243,8 +252,13 @@ switch:
       - uart.write:
           id: uart_bus
           data: !lambda |-
+            std::string s = "Motor 2 ON " + std::to_string((int)id(motor_2_speed).state) + "\n";
+            return std::vector<unsigned char>(s.begin(), s.end());
+      - delay: 500ms
+      - uart.write:
+          id: uart_bus
+          data: !lambda |-
             std::string s = std::string("Motor 2 ") + (id(motor_2_direction).state ? "FWD" : "REV") + "\n";
-            s += "Motor 2 ON " + std::to_string((int)id(motor_2_speed).state) + "\n";
             return std::vector<unsigned char>(s.begin(), s.end());
     turn_off_action:
       - uart.write:
@@ -277,8 +291,13 @@ switch:
       - uart.write:
           id: uart_bus
           data: !lambda |-
+            std::string s = "Motor 3 ON " + std::to_string((int)id(motor_3_speed).state) + "\n";
+            return std::vector<unsigned char>(s.begin(), s.end());
+      - delay: 500ms
+      - uart.write:
+          id: uart_bus
+          data: !lambda |-
             std::string s = std::string("Motor 3 ") + (id(motor_3_direction).state ? "FWD" : "REV") + "\n";
-            s += "Motor 3 ON " + std::to_string((int)id(motor_3_speed).state) + "\n";
             return std::vector<unsigned char>(s.begin(), s.end());
     turn_off_action:
       - uart.write:
@@ -311,8 +330,13 @@ switch:
       - uart.write:
           id: uart_bus
           data: !lambda |-
+            std::string s = "Motor 4 ON " + std::to_string((int)id(motor_4_speed).state) + "\n";
+            return std::vector<unsigned char>(s.begin(), s.end());
+      - delay: 500ms
+      - uart.write:
+          id: uart_bus
+          data: !lambda |-
             std::string s = std::string("Motor 4 ") + (id(motor_4_direction).state ? "FWD" : "REV") + "\n";
-            s += "Motor 4 ON " + std::to_string((int)id(motor_4_speed).state) + "\n";
             return std::vector<unsigned char>(s.begin(), s.end());
     turn_off_action:
       - uart.write:
@@ -345,8 +369,13 @@ switch:
       - uart.write:
           id: uart_bus
           data: !lambda |-
+            std::string s = "Motor 5 ON " + std::to_string((int)id(motor_5_speed).state) + "\n";
+            return std::vector<unsigned char>(s.begin(), s.end());
+      - delay: 500ms
+      - uart.write:
+          id: uart_bus
+          data: !lambda |-
             std::string s = std::string("Motor 5 ") + (id(motor_5_direction).state ? "FWD" : "REV") + "\n";
-            s += "Motor 5 ON " + std::to_string((int)id(motor_5_speed).state) + "\n";
             return std::vector<unsigned char>(s.begin(), s.end());
     turn_off_action:
       - uart.write:
@@ -379,8 +408,13 @@ switch:
       - uart.write:
           id: uart_bus
           data: !lambda |-
+            std::string s = "Motor 6 ON " + std::to_string((int)id(motor_6_speed).state) + "\n";
+            return std::vector<unsigned char>(s.begin(), s.end());
+      - delay: 500ms
+      - uart.write:
+          id: uart_bus
+          data: !lambda |-
             std::string s = std::string("Motor 6 ") + (id(motor_6_direction).state ? "FWD" : "REV") + "\n";
-            s += "Motor 6 ON " + std::to_string((int)id(motor_6_speed).state) + "\n";
             return std::vector<unsigned char>(s.begin(), s.end());
     turn_off_action:
       - uart.write:
