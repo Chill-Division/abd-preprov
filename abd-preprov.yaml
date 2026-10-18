@@ -15,7 +15,17 @@ esphome:
   # configuration and updates.
   project:
     name: chill-division.abd-preprov
-    version: "1.0"
+    version: "2.0"
+
+  # The doser only announces its firmware version when it powers up, which is
+  # usually before we're listening, so ask for it once everything is running.
+  on_boot:
+    priority: -100
+    then:
+      - delay: 5s
+      - uart.write:
+          id: uart_bus
+          data: "VERSION\n"
 
 esp32:
   # Using the generic P4 board target
@@ -45,7 +55,7 @@ ota:
 
 # This should point to the public location of this yaml file.
 dashboard_import:
-  package_import_url: github://Chill-Division/abd-preprov/abd-preprov.yaml@v1
+  package_import_url: github://Chill-Division/abd-preprov/abd-preprov.yaml@v2
   import_full_config: true
 
 # Network interface for Unit PoE P4
@@ -78,6 +88,7 @@ uart:
   baud_rate: 115200 
 
 
+# Speeds are restored after a reboot, so calibration isn't lost
 number:
   - platform: template
     name: "Motor 1 Speed"
@@ -87,6 +98,7 @@ number:
     max_value: 2500
     step: 10
     initial_value: 1700
+    restore_value: true
   - platform: template
     name: "Motor 2 Speed"
     id: motor_2_speed
@@ -95,6 +107,7 @@ number:
     max_value: 2500
     step: 10
     initial_value: 1700
+    restore_value: true
   - platform: template
     name: "Motor 3 Speed"
     id: motor_3_speed
@@ -103,6 +116,7 @@ number:
     max_value: 2500
     step: 10
     initial_value: 1700
+    restore_value: true
   - platform: template
     name: "Motor 4 Speed"
     id: motor_4_speed
@@ -111,6 +125,7 @@ number:
     max_value: 2500
     step: 10
     initial_value: 1700
+    restore_value: true
   - platform: template
     name: "Motor 5 Speed"
     id: motor_5_speed
@@ -119,6 +134,7 @@ number:
     max_value: 2500
     step: 10
     initial_value: 1700
+    restore_value: true
   - platform: template
     name: "Motor 6 Speed"
     id: motor_6_speed
@@ -127,6 +143,7 @@ number:
     max_value: 2500
     step: 10
     initial_value: 1700
+    restore_value: true
 
 button:
   - platform: template
@@ -474,3 +491,15 @@ text_sensor:
     name: "Calibration Status"
     id: calibration_status
 
+# Keep asking for the doser's firmware version until it answers. Doser firmware
+# older than 5.1.5 ignores this, and only reports its version when it powers up.
+interval:
+  - interval: 60s
+    then:
+      - if:
+          condition:
+            lambda: 'return !id(fw_version_sensor).has_state();'
+          then:
+            - uart.write:
+                id: uart_bus
+                data: "VERSION\n"
